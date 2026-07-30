@@ -7,6 +7,6 @@ type Peer interface {
 
 // Transport is anything that handles communication
 // between  the nodes in the network .
-// it follow protocols like tcp udp 	websockets.
+// it follow protocols like tcp udp websockets.
 type Transport interface {
 }
