@@ -1,7 +1,6 @@
 package p2p
 
 import (
-	"bytes"
 	"fmt"
 	"net"
 	"sync"
@@ -76,24 +75,32 @@ func (t *TCPTransport) startAcceptLoop() {
 			fmt.Printf("TCP accept error : %s\n", err)
 		}
 
+		fmt.Printf("new incoming connection %+v\n", conn)
+
 		go t.handleConnection(conn)
 	}
 }
 
+type Temp struct{}
+
 func (t *TCPTransport) handleConnection(conn net.Conn) {
 	peer := NewTCPPeer(conn, true)
 
-	if err := t.HandshakeFunc(conn); err != nil {
+	if err := t.HandshakeFunc(peer); err != nil {
 
 	}
 
-	buffer := new(bytes.Buffer)
-
+	//Read Loop
+	msg := &Temp{}
 	for {
 
-		n, _ := conn.Read(buffer)
+		if err := t.decoder.Decode(conn, msg); err != nil {
+
+			fmt.Printf("TCP Error : %s\n", err)
+			continue
+
+		}
 
 	}
 
-	fmt.Printf("new incoming connection %+v\n", peer)
 }
