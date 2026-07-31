@@ -88,6 +88,10 @@ func (t *TCPTransport) handleConnection(conn net.Conn) {
 
 	if err := t.HandshakeFunc(peer); err != nil {
 
+		conn.Close()
+		fmt.Printf("TCP Handshake error : %s\n", err)
+		return
+
 	}
 
 	//Read Loop
