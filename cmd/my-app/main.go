@@ -1,18 +1,21 @@
 package main
 
 import (
-	"log"
-
 	"github.com/Debjit28/gopher-Cas/p2p"
 )
 
 func main() {
-	tr := p2p.NewTCPTransport(":3000")
-
-	if err := tr.ListenAndAccept(); err != nil {
-		log.Fatal(err)
+	opts := p2p.TCPTransportOpt{
+		ListenAddr: ":3000",
 	}
 
+	tr := p2p.NewTCPTransport(opts)
+
+	if err := tr.ListenAndAccept(); err != nil {
+		panic(err)
+	}
+
+	// Keep main process alive while accepting connections
 	select {}
 
 }
