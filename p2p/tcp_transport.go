@@ -25,6 +25,11 @@ func NewTCPPeer(conn net.Conn, outbound bool) *TCPPeer {
 	}
 }
 
+// this function implements the peer interface
+func (p *TCPPeer) Close() error {
+	return p.conn.Close()
+}
+
 type TCPTransportOpt struct {
 	ListenAddr    string
 	HandshakeFunc HandshakeFunc
@@ -103,23 +108,13 @@ func (t *TCPTransport) handleConnection(conn net.Conn) {
 	}
 
 	//Read Loop
-
-	//buf := make([]byte, 2000)
 	rpc := RPC{}
 	for {
-
-		// n, err := conn.Read(buf)
-
-		// if err != nil {
-
-		// 	fmt.Printf("TCP Error : %s\n", err)
-
-		// }
 
 		if err := t.Decoder.Decode(conn, &rpc); err != nil {
 
 			fmt.Printf("TCP Error : %s\n", err)
-			continue
+			return //<---------------earlier had put continue instead of return which caused a mess known an infinite loop of go routines------->
 
 		}
 

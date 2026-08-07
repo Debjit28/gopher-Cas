@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/Debjit28/gopher-Cas/p2p"
@@ -14,6 +15,15 @@ func main() {
 	}
 
 	tr := p2p.NewTCPTransport(opts)
+
+	go func() {
+		for {
+
+			msg := <-tr.Consume()
+			fmt.Printf("[%s]: %s\n", msg.From, string(msg.Payload)) //----------------------cleaner and readable output------------
+		}
+
+	}()
 
 	if err := tr.ListenAndAccept(); err != nil {
 		log.Fatal(err)
